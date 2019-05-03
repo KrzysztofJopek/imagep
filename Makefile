@@ -1,7 +1,7 @@
 CC = gcc
 SRC = $(wildcard src/*.c)
 OBJ = $(SRC:%.c=%.o)
-LDFLAGS = 
+LDFLAGS = -lm
 CFLAGS = -g
 INC = -Iinclude/ 
 
