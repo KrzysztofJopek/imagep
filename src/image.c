@@ -2,6 +2,9 @@
 //stb_image to load image from file
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+//stb_image_write to write image to file
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image_write.h"
 
 /*
  * Gets pointer to pixel from image.
@@ -33,8 +36,15 @@ struct image* load_image(const char* path, int channels)
 	return image;
 }
 
+int save_image(struct image* image)
+{
+	return stbi_write_bmp("output.bmp", image->width, image->height,
+			image->channels, image->data);
+}
+
 void free_image(struct image* image)
 {
 	stbi_image_free(image->data);
 	free(image);
 }
+

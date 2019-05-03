@@ -9,6 +9,7 @@ struct image{
 };
 
 struct image* load_image(const char* path, int channels);
+int save_image(struct image* image);
 void free_image(struct image* image);
 unsigned char* get_pixel(const struct image* image, int x, int y);
 

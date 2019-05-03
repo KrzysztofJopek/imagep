@@ -53,3 +53,7 @@ dkms.conf
 
 # text editor 
 .vimrc
+
+# outputs
+output.bmp
+imagep
