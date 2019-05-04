@@ -31,8 +31,10 @@ struct image* load_image(const char* path, int channels)
 
 	image->data = stbi_load(path, &image->width, &image->height,
 			&image->channels, channels);
-	if(!image->data)
+	if(!image->data){
+		free(image);
 		return NULL;
+	}
 	return image;
 }
 
@@ -47,9 +49,30 @@ int save_image(struct image* image)
 			image->channels, image->data);
 }
 
+/*
+ * Create empty image struct
+ */
+struct image* empty_image(int x, int y, int channels)
+{
+	struct image* image = (struct image*)malloc(sizeof(struct image));
+	if(!image)
+		return NULL;
+
+	image->data = (unsigned char*)malloc(
+			sizeof(unsigned char)*x*y*channels);
+	if(image->data){
+		free(image);
+		return NULL;
+	}
+	image->width = x;
+	image->height = y;
+	image->channels = channels;
+	return image;
+}
+
 void free_image(struct image* image)
 {
-	stbi_image_free(image->data);
+	free(image->data);
 	free(image);
 }
 
