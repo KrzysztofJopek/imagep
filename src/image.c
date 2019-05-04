@@ -60,7 +60,7 @@ struct image* empty_image(int x, int y, int channels)
 
 	image->data = (unsigned char*)malloc(
 			sizeof(unsigned char)*x*y*channels);
-	if(image->data){
+	if(!image->data){
 		free(image);
 		return NULL;
 	}
@@ -74,5 +74,23 @@ void free_image(struct image* image)
 {
 	free(image->data);
 	free(image);
+}
+
+/*
+ * Copy pixel from image_in to image_out
+ * if src_pixel or dst_pixel is out of range return value will be 0.
+ * Both images must have the same number of channels, otherwise result
+ * is undefined and possibly buffer overflow.
+ */
+int copy_pixel(struct image* image_in, struct image* image_out,
+	       	int src_x, int src_y, int dst_x, int dst_y)
+{
+	unsigned char* src_pixel = get_pixel(image_in, src_x, src_y);
+	unsigned char* dst_pixel = get_pixel(image_out, dst_x, dst_y);
+	if(!dst_pixel || !src_pixel)
+		return 0;
+
+	memcpy(dst_pixel, src_pixel, sizeof(unsigned char)*image_in->channels);
+	return 1;
 }
 

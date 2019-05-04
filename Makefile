@@ -8,10 +8,10 @@ INC = -Iinclude/
 all: imagep
 
 imagep: $(OBJ)
-	$(CC) $(PR) -o $@ $^ $(LDFLAGS)
+	$(CC) $(PR) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 %.o: %.c
-	$(CC) $(PR) -c $< -o $@ $(INC)
+	$(CC) $(PR) $(CFLAGS) -c $< -o $@ $(INC)
 
 clean:
 	rm -f $(OBJ) imagep
