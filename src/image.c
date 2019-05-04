@@ -36,6 +36,11 @@ struct image* load_image(const char* path, int channels)
 	return image;
 }
 
+
+/*
+ * Saves image to output.bmp
+ *TODO redirect image to STDOUT
+ */
 int save_image(struct image* image)
 {
 	return stbi_write_bmp("output.bmp", image->width, image->height,
