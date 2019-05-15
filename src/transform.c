@@ -11,6 +11,11 @@ struct size{
 struct size size_after_affine(float a1, float a2, float a3, float a4,
 	       	int width, int height);
 
+/*
+ * transform image_in and return new image,
+ * a1, a2, a3 ,a4 is transformation matrix,
+ * if resize is true, then new image won't be cropped
+ */
 struct image* affine_transform(float a1, float a2, float a3, float a4,
 	       	struct image* image_in, int resize)
 {
@@ -40,6 +45,9 @@ struct image* affine_transform(float a1, float a2, float a3, float a4,
 	return image_out;
 }
 
+/*
+ * Calculate what will be the size of image after affine transform
+ */
 struct size size_after_affine(float a1, float a2, float a3, float a4,
 	       	int width, int height)
 {
