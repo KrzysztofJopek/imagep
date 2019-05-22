@@ -12,11 +12,11 @@ void get_mult_mask(struct mask mask, struct mask* values, struct image* image,
 struct image* apply_mask(struct image* image_in, struct mask mask,
 		double (*filt_func)(struct mask))
 {
-	struct image* image_out = empty_image(image_in->width, image_in->height,
+    struct image* image_out = empty_image(image_in->width, image_in->height,
             image_in->channels);
-	int center = mask.size/2;
+    int center = mask.size/2;
     double data[mask.size*mask.size];
-	struct mask temp = {data, mask.size};
+    struct mask temp = {data, mask.size};
     
 	for(int x=0; x<image_in->width - mask.size; x++){
 		for(int y=0; y<image_in->height - mask.size; y++){
