@@ -5,6 +5,10 @@
 void get_mult_mask(struct mask mask, struct mask* values, struct image* image,
 		int x, int y, int channel);
 
+/*
+ * Apply mask to the image and return output image,
+ * You have to specify filtration function as defined filt_func
+ */ 
 struct image* apply_mask(struct image* image_in, struct mask mask,
 		double (*filt_func)(struct mask))
 {
@@ -26,6 +30,10 @@ struct image* apply_mask(struct image* image_in, struct mask mask,
     return image_out;
 }
 
+/*
+ * Multiply masked part of image by mask(for one channel),
+ * and return output in values struct
+ */
 void get_mult_mask(struct mask mask, struct mask* values, struct image* image,
 		int x, int y, int channel)
 {
@@ -38,6 +46,10 @@ void get_mult_mask(struct mask mask, struct mask* values, struct image* image,
 	}
 }
 
+/*
+ * One of possible filter functions passed to apply_mask
+ * Calculates value of new pixel from given "masked" region
+ */
 double std_filt(struct mask values)
 {
     //calculate mean
@@ -59,11 +71,18 @@ double std_filt(struct mask values)
     return sqrt(res/(size-1));
 }
 
+/*
+ * Test filter
+ */
 double new_filt(struct mask values)
 {
     return values.values[1];
 }
 
+/*
+ * public function
+ * Creates mask and runs std filtration
+ */
 struct image* stdfilt(struct image* image)
 {
     double data[] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
