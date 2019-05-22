@@ -11,7 +11,7 @@ struct image* apply_mask(struct image* image_in, struct mask mask,
 	struct image* image_out = empty_image(image_in->width, image_in->height,
             image_in->channels);
 	int center = mask.size/2;
-    double data[9];
+    double data[mask.size*mask.size];
 	struct mask temp = {data, mask.size};
     
 	for(int x=0; x<image_in->width - mask.size; x++){
@@ -66,7 +66,7 @@ double new_filt(struct mask values)
 
 struct image* stdfilt(struct image* image)
 {
-    double data[] = {1,1,1,1,1,1,1,1,1};
-    struct mask mask = {data, 3};
+    double data[] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+    struct mask mask = {data, 5};
     return apply_mask(image, mask, std_filt);
 }
