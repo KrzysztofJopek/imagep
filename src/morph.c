@@ -107,14 +107,28 @@ unsigned char find_max(struct image* image, struct line* line, int x, int y)
         for(int r=0; r<line->x; r++){
             //if(c == line->cy && r == line->cx)
             //    continue;
-            if(*(line->values + c*line->y + r) == 0)
-                continue;
             if((pix = get_pixel(image, x+r, y+c)) != NULL){
                 max = *pix > max ? *pix : max;
             }
         }
     }
     return max;
+}
+
+unsigned char find_min(struct image* image, struct line* line, int x, int y)
+{
+    unsigned char min = 0xff;
+    unsigned char* pix = NULL;
+    for(int c=0; c<line->y; c++){
+        for(int r=0; r<line->x; r++){
+            //if(c == line->cy && r == line->cx)
+            //    continue;
+            if((pix = get_pixel(image, x+r, y+c)) != NULL){
+                min = *pix < min ? *pix : min;
+            }
+        }
+    }
+    return min;
 }
 
 struct image* dilation(int length, double rad, struct image* image_in)
@@ -138,10 +152,41 @@ struct image* dilation(int length, double rad, struct image* image_in)
         }
     }
 
+    free_line(line);
+    return image_out;
+}
+
+
+struct image* erosion(int length, double rad, struct image* image_in)
+{
+    if(image_in->channels != 1){
+        fprintf(stderr, "Can't use dilation on multi channel image\n");
+        return NULL;
+    }
+    struct line* line = create_line(length, rad);
+    if(!line)
+        ERROR();
+
+    struct image* image_out = empty_image(image_in->width, image_in->height,
+            image_in->channels);
+    if(!image_out)
+        ERROR();
+
+    for(int y=0; y<image_in->width; y++){
+        for(int x=0; x<image_in->height; x++){
+            *(get_pixel(image_out, x, y)) = find_min(image_in, line, x, y);
+        }
+    }
 
     free_line(line);
     return image_out;
 }
 
 
-
+struct image* imclose(int length, double rad, struct image* image_in)
+{
+    struct image* imgdil = dilation(length, rad, image_in);
+    struct image* imgclose = erosion(length, rad, imgdil);
+    free_image(imgdil);
+    return imgclose;
+}
