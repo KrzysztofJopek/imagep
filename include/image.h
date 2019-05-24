@@ -1,6 +1,11 @@
 #ifndef _IMAGE_H_
 #define _IMAGE_H_
 
+#include <stdio.h>
+#include <stdlib.h>
+
+#define ERROR() do{fprintf(stderr, "ERROR OCCURED\n"); exit(1);}while(0)
+
 struct image{
 	unsigned char* data;
 	int width;
