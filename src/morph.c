@@ -13,31 +13,31 @@ struct line{
 void draw_line(int x1, int y1, int x2, int y2, struct line* line)
 {
     double dx,dy,step;
-	double x ,y;
+    double x ,y;
     int i;
 
     dx=abs(x2-x1);
-	dy=abs(y2-y1);
+    dy=abs(y2-y1);
 
-	if(dx>=dy)
-		step=x2-x1;
-	else
-		step=y2-y1;
+    if(dx>=dy)
+        step=x2-x1;
+    else
+        step=y2-y1;
 
-	dx=dx/step;
-	dy=dy/step;
+    dx=dx/step;
+    dy=dy/step;
 
-	x=x1;
-	y=y1;
+    x=x1;
+    y=y1;
 
-	i=1;
-	while(i<=abs(step)+1)
-	{
+    i=1;
+    while(i<=abs(step)+1)
+    {
         *(line->values + (line->x*(int)(abs(y))+ (int)(abs(x)))) = 1;
-		x=x+dx;
-		y=y+dy;
-		i=i+1;
-	}
+        x=x+dx;
+        y=y+dy;
+        i=i+1;
+    }
 
 #ifdef _DEBUG_
     for(int x=0; x<line->x; x++){
@@ -104,7 +104,7 @@ struct image* dilation(int length, double rad, struct image* image_in)
     if(!line)
         ERROR();
 
-    
+
 
 
     free_line(line);
