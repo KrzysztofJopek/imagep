@@ -8,6 +8,9 @@ struct line{
     double* values;
     int x;
     int y;
+    //center
+    int cx;
+    int cy;
 };
 
 void draw_line(int x1, int y1, int x2, int y2, struct line* line)
@@ -79,6 +82,8 @@ struct line* create_line(int length, int angle)
     }
     line->x = abs(x2-x1)+1;
     line->y = abs(y2-y1)+1;
+    line->cx = line->x/2;
+    line->cy = line->y/2;
     line->values = calloc(line->x*line->y, sizeof(double));
     if(!line->values)
         return NULL;
@@ -94,6 +99,24 @@ void free_line(struct line* line)
     free(line);
 }
 
+unsigned char find_max(struct image* image, struct line* line, int x, int y)
+{
+    unsigned char max = 0;
+    unsigned char* pix = NULL;
+    for(int c=0; c<line->y; c++){
+        for(int r=0; r<line->x; r++){
+            //if(c == line->cy && r == line->cx)
+            //    continue;
+            if(*(line->values + c*line->y + r) == 0)
+                continue;
+            if((pix = get_pixel(image, x+r, y+c)) != NULL){
+                max = *pix > max ? *pix : max;
+            }
+        }
+    }
+    return max;
+}
+
 struct image* dilation(int length, double rad, struct image* image_in)
 {
     if(image_in->channels != 1){
@@ -104,11 +127,20 @@ struct image* dilation(int length, double rad, struct image* image_in)
     if(!line)
         ERROR();
 
+    struct image* image_out = empty_image(image_in->width, image_in->height,
+            image_in->channels);
+    if(!image_out)
+        ERROR();
 
+    for(int y=0; y<image_in->width; y++){
+        for(int x=0; x<image_in->height; x++){
+            *(get_pixel(image_out, x, y)) = find_max(image_in, line, x, y);
+        }
+    }
 
 
     free_line(line);
-    return NULL;
+    return image_out;
 }
 
 
