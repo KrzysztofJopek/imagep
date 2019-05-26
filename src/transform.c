@@ -1,5 +1,6 @@
 #include "image.h"
 #include <limits.h>
+#include <string.h>
 
 struct size{
 	int min_x;
@@ -35,11 +36,12 @@ struct image* affine_transform(float a1, float a2, float a3, float a4,
 
 	struct image* image_out = empty_image(w, h, image_in->channels);
 
-	for(int x=0; x<image_in->width; x++){
-		for(int y=0; y<image_in->height; y++){
-			int pix_x = x*a1 + y*a2 + bx;
-			int pix_y = x*a3 + y*a4 + by;
-			copy_pixel(image_in, image_out, x, y, pix_x, pix_y);
+	for(int x=0; x<image_out->width; x++){
+		for(int y=0; y<image_out->height; y++){
+			int pix_x = (a2*(y-by) + a4*(bx-x))/(a2*a3 - a1*a4);
+			int pix_y = (-a1*y + a1*by + a3*x - a3*bx)/(a2*a3 - a1*a4);
+			if(copy_pixel(image_in, image_out, pix_x, pix_y, x, y) == 0)
+                memset(get_pixel(image_out, x, y), 0, sizeof(unsigned char) * image_out->channels);
 		}
 	}
 	return image_out;

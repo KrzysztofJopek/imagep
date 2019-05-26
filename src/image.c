@@ -44,10 +44,12 @@ struct image* load_image(const char* path, int channels)
  * Saves image to output.bmp
  *TODO redirect image to STDOUT
  */
-int save_image(struct image* image)
+int save_image(struct image* image, int nr)
 {
-	return stbi_write_bmp("output.bmp", image->width, image->height,
-			image->channels, image->data);
+    char name[255];
+    snprintf(name, 255, "output%d.png", nr);
+	return stbi_write_png(name, image->width, image->height,
+			image->channels, image->data, 0);
 }
 
 /*
@@ -99,4 +101,23 @@ void copy_image(struct image* image_in, struct image* image_out)
 {
     memcpy(image_out->data, image_in->data, sizeof(unsigned char)*
             image_out->width * image_out->height * image_out->channels);
+}
+
+struct image* getChannel(struct image* image_in, int channel)
+{
+    if(channel < 0 && channel > image_in->channels) 
+        return NULL;
+
+    struct image* out = empty_image(image_in->width, image_in->height, 1);
+    if(!out)
+        ERROR();
+
+    unsigned char* pin = image_in->data;
+    unsigned char* pout = out->data;
+    pin += channel;
+    for(int i=0; i<image_in->width*image_in->height; i++){
+        *pout++ = *pin;
+        pin += image_in->channels;
+    }
+    return out;
 }

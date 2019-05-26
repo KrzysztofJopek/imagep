@@ -11,7 +11,9 @@ struct mask{
 struct image* apply_mask(struct image* image_in, struct mask mask,
 		double (*filt_func)(struct mask), int extend);
 
-struct image* stdfilt(struct image* image);
+struct image* stdfilt(struct image* image, int size);
 struct image* convex_hull(struct image* image);
+
+void normalize(struct image* image);
 
 #endif

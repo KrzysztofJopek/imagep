@@ -20,8 +20,7 @@ struct image* apply_mask(struct image* image_in, struct mask mask,
         copy_image(image_in, image_out);
     
     int center = mask.size/2;
-    double data[mask.size*mask.size];
-    struct mask temp = {data, mask.size};
+    double data[mask.size*mask.size]; struct mask temp = {data, mask.size};
 
     for(int x=0; x<image_in->width - mask.size; x++){
         for(int y=0; y<image_in->height - mask.size; y++){
@@ -32,7 +31,6 @@ struct image* apply_mask(struct image* image_in, struct mask mask,
                 }
                 else{
                     if((*filt_func)(temp) >= 0.9){
-                        printf("XD\n");
                         *(get_pixel(image_out, x+center, y+center)+ch) = 0xff;
                     }
                 }
@@ -87,10 +85,12 @@ double std_filt(struct mask values)
  * public function
  * Creates mask and runs std filtration
  */
-struct image* stdfilt(struct image* image)
+struct image* stdfilt(struct image* image, int size)
 {
-    double data[] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
-    struct mask mask = {data, 5};
+    double data[size*size];
+    for(int i=0; i<size*size; i++)
+        data[i] = 1;
+    struct mask mask = {data, size};
     return apply_mask(image, mask, std_filt, 0);
 }
 
@@ -143,6 +143,45 @@ struct image* convex_hull(struct image* image)
                 free_image(image_prev);
         }
     }
+    unsigned char* p = image_out->data;
+    for(int i=0; i<image_out->width*image_out->height; i++){
+        if(*p > 100)
+            *p = 0xff;
+        else
+            *p = 0;
+        p++;
+    }
     return image_out;
+}
+
+void normalize(struct image* image)
+{
+    unsigned char max[image->channels];
+    unsigned char min[image->channels];
+    for(int i=0; i<image->channels; i++){
+        min[i] = 255;
+        max[i] = 0;
+    }
+
+    unsigned char* p = image->data;
+    for(int i=0; i<image->width*image->height; i++){
+        for(int ch = 0; ch<image->channels; ch++){
+            max[ch] = *p > max[ch] ? *p : max[ch];
+            min[ch] = *p < min[ch] ? *p : min[ch];
+            p++;
+        }
+    }
+    double wsp[image->channels];
+    for(int ch = 0; ch<image->channels; ch++){
+        wsp[ch] = 255.0/(max[ch] - min[ch]);
+    }
+    printf("%d %d %f\n", min[0], max[0], wsp[0]);
+    p = image->data;
+    for(int i=0; i<image->width*image->height; i++){
+        for(int ch = 0; ch<image->channels; ch++){
+            *p = (*p - min[ch]) + *p * wsp[ch];
+            p++;
+        }
+    }
 }
 
