@@ -13,6 +13,9 @@ struct line{
     int cy;
 };
 
+/*
+ * create line from 2 points
+ */
 void draw_line(int x1, int y1, int x2, int y2, struct line* line)
 {
     double dx,dy,step;
@@ -53,6 +56,9 @@ void draw_line(int x1, int y1, int x2, int y2, struct line* line)
 
 }
 
+/*
+ * create line from angle and length
+ */
 struct line* create_line(int length, int angle)
 {
     struct line* line = malloc(sizeof(struct line));
@@ -99,6 +105,9 @@ void free_line(struct line* line)
     free(line);
 }
 
+/*
+ * find max val pixel in line mask
+ */
 unsigned char find_max(struct image* image, struct line* line, int x, int y)
 {
     unsigned char max = 0;
@@ -115,6 +124,9 @@ unsigned char find_max(struct image* image, struct line* line, int x, int y)
     return max;
 }
 
+/*
+ * find min val pixel in line mask
+ */
 unsigned char find_min(struct image* image, struct line* line, int x, int y)
 {
     unsigned char min = 0xff;

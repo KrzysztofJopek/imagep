@@ -5,6 +5,7 @@
 //stb_image_write to write image to file
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
+#include <string.h>
 
 /*
  * Gets pointer to pixel from image.
@@ -94,3 +95,8 @@ int copy_pixel(struct image* image_in, struct image* image_out,
 	return 1;
 }
 
+void copy_image(struct image* image_in, struct image* image_out)
+{
+    memcpy(image_out->data, image_in->data, sizeof(unsigned char)*
+            image_out->width * image_out->height * image_out->channels);
+}
