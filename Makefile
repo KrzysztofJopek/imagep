@@ -1,17 +1,25 @@
+.DEFAULT_GOAL = imagep
+OUTPUT_OPTION = -MMD -MP -o $@
 CC = gcc
 SRC = $(wildcard src/*.c)
 OBJ = $(SRC:%.c=%.o)
+DEP = $(SRC:%.c=%.d)
+
 LDFLAGS = -lm
 CFLAGS = -g
-INC = -Iinclude/ 
-
-all: imagep
+INCLUDES = -Iinclude/ 
+-include $(DEP)
+CFLAGS += $(INCLUDES)
 
 imagep: $(OBJ)
-	$(CC) $(PR) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-%.o: %.c
-	$(CC) $(PR) $(CFLAGS) -c $< -o $@ $(INC)
+#------
+
+tags: $(SRC)
+	ctags -R
+
+.PHONY: clean
 
 clean:
-	rm -f $(OBJ) imagep
+	rm -f $(OBJ) $(DEP) imagep tags
