@@ -163,9 +163,17 @@ int main(int argc, char* argv[])
         fprintf(stderr, "You can't use these options together\n");
         exit(1);
     }
+    if(howmany==0){
+        fprintf(stderr, "You didn't specify any option\n");
+        exit(1);
+    }
 
 
     struct image* img = load_image(arguments.input, arguments.channels);
+    if(!img){
+        fprintf(stderr, "Couldn't load image\n");
+        exit(1);
+    }
     struct image* img_out;
     if(arguments.affine){
         double* mx = arguments.affine_matrix;
